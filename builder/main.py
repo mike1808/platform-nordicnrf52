@@ -122,9 +122,10 @@ env.Append(
 )
 
 upload_protocol = env.subst("$UPLOAD_PROTOCOL")
+bsp = board.get("build.bsp.name", "nrf5")
 
 if "nrfutil" == upload_protocol or (
-    board.get("build.bsp.name", "nrf5") == "adafruit"
+    bsp.startswith("adafruit")
     and "arduino" in env.get("PIOFRAMEWORK", [])
 ):
     env.Append(
@@ -153,7 +154,8 @@ if "nrfutil" == upload_protocol or (
                             '"$PYTHONEXE"',
                             '"%s"' % join(
                                 platform.get_package_dir(
-                                    "framework-arduinoadafruitnrf52"
+                                    "framework-arduinoadafruitnrf52-seeed" if bsp == "adafruit-seeed" 
+                                        else "framework-arduinoadafruitnrf52"
                                 )
                                 or "",
                                 "tools",

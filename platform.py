@@ -34,11 +34,17 @@ class Nordicnrf52Platform(PlatformBase):
             upload_protocol = variables.get(
                 "upload_protocol",
                 self.board_config(board).get("upload.protocol", ""))
+            bsp = self.board_config(board).get("build.bsp.name",
+                                            "nrf5")
 
-            if self.board_config(board).get("build.bsp.name",
-                                            "nrf5") == "adafruit":
-                self.frameworks["arduino"][
-                    "package"] = "framework-arduinoadafruitnrf52"
+            if bsp.startswith("adafruit"):
+                if bsp == "adafruit":
+                    self.frameworks["arduino"][
+                        "package"] = "framework-arduinoadafruitnrf52"
+                elif bsp == "adafruit-seeed":
+                    self.frameworks["arduino"][
+                        "package"] = "framework-arduinoadafruitnrf52-seeed"
+
                 self.packages["framework-cmsis"]["optional"] = False
                 self.packages["tool-adafruit-nrfutil"]["optional"] = False
 
